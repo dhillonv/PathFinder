@@ -1,0 +1,6 @@
+START(0,0)
+GOAL(0,2)
+
+ooox
+xxoo
+ooox
