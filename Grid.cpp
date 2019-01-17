@@ -4,16 +4,17 @@
 #include <string>
 #include <vector>
 #include <tuple>
-#include <cstdio>
 #include <sstream>
 #include <math.h>
 
 Grid::Grid(){
+    //initialise empty grid
     m=0;
     n=0;
 }
 
 Grid::~Grid(){
+    //no need for a destructor
 }
 
 void Grid::loadFromFile(const std::string& filename){
@@ -44,7 +45,8 @@ void Grid::loadFromFile(const std::string& filename){
 	"Position outside of the range of the grid."
 	 */
 
-	//load file
+	//load file - we assume the name of the file we are opening is of type .txt
+
     std::ifstream inputfile;
     std::string fline,blockcheck;
     std::string startstr = "START";
@@ -63,11 +65,15 @@ void Grid::loadFromFile(const std::string& filename){
     std::tuple<int,int,int> point;
     std::string index;
 
+    //store each line of the file in fline
+
     while(getline(inputfile,fline)){
         if(!fline.empty()){
+
                 //first line
                 if(fline.find(startstr)!=std::string::npos){
-                    //string is of the form START(X1,X2)
+                    //line is of the form START(X1,X2)
+                    //store X1 and X2 in the array startpoint
                     index = fline[6];
                     std::istringstream (index) >> stringint;
                     startpoint[0] = stringint;
@@ -75,9 +81,11 @@ void Grid::loadFromFile(const std::string& filename){
                     std::istringstream (index) >> stringint;
                     startpoint[1] = stringint;
                 }
+
                 //goal line
                 else if(fline.find(endstr)!=std::string::npos){
                     //string is of the form GOAL(X1,X2)
+                    //store X1 and X2 in the array endpoint
                     index = fline[5];
                     std::istringstream (index) >> stringint;
                     endpoint[0] = stringint; //5,7
@@ -87,42 +95,51 @@ void Grid::loadFromFile(const std::string& filename){
                 }
 
                 else{
-                if(m==0){m = fline.length();}
+                    //initialise m, this should be constant
+                    if(m==0){m = fline.length();}
 
-                if(m!=fline.length()){
-                    std::cout << "Error loading grid description." << std::endl;
-                    return;
-                }
-
-                for(int y=0;y<m;++y){
-                    blockcheck = fline[y];
-                    if(blockcheck == "o"){
-                    point = {y,-counter,0};
-                    gridvec.push_back(point);
-                    //counter++;
-                    }
-                else if(blockcheck == "x"){
-                    point = {y,-counter,1};
-                    gridvec.push_back(point);
-                    //counter++;
+                    //make sure m is constant
+                    if(m!=fline.length()){
+                        std::cout << "Error loading grid description." << std::endl;
+                        return;
                     }
 
-                else{
-                    std::cout << "Error loading grid description." << std::endl;
-                    return;
+                    for(int y=0;y<m;++y){
+
+                        blockcheck = fline[y];
+
+                        //point is open, add this to the grid
+                        if(blockcheck == "o"){
+                            point = {y,-counter,0};
+                            gridvec.push_back(point);
+                        }
+                        //point is blocked, add this to the grid
+                        else if(blockcheck == "x"){
+                            point = {y,-counter,1};
+                            gridvec.push_back(point);
+                        }
+
+                        //grid should only consist of o's and x's
+                        else{
+                            std::cout << "Error loading grid description." << std::endl;
+                            return;
+                        }
                     }
-                }
-                counter++;
+                    //counter will give a count of the height of the grid
+                    counter++;
                 }
         }
     }
-    n = counter - 1;
-    //n = counter-1;
+
+    n = counter - 1; //the height of the grid - 1, will be adjusted
+
     //now adjust the y coordinate
     for(int x=0;x<gridvec.size();++x){
         std::get<1>(gridvec[x]) +=n;
     }
+    //adjust n
     n++;
+    //close file
     inputfile.close();
     }
 
@@ -132,6 +149,7 @@ bool Grid::isStart(int x,int y) const{
 	// returns false otherwise.
 	// If (x,y) is outside of the grid, throw
 	// "Position outside of the range of the grid."
+
 	if((x>m-1)||(y>n-1)){
         std::cout << "Position outside of the range of the grid." << std::endl;
         return false;
@@ -273,21 +291,20 @@ bool Grid::existsPath(){
 
     //now we need an algorithm to find a path.
     int gx,gy,numpaths;
-    //gx = std::get<0>(currentpoint);
-    //gy = std::get<1>(currentpoint);
+
     gx = endpoint[0];
     gy = endpoint[1];
-    //make a function called forward path
+
     std::vector<std::vector<std::tuple<int,int>>> paths,proxypaths,temppaths;
     std::vector<std::tuple<int,int>> proxypath;
+
     paths.push_back(pathvec);
 
     int checker=0,cx,cy,pathlen;
     paths = ForwardPath(gridvec,pathvec); //first movement
 
     while(1){
-        //PrintPaths(paths);
-        //check is any of the paths reached the end point
+        //check if any of the paths reached the end point
         if(paths.size()==0){return false;}
 
         pathlen = (paths[0]).size();
@@ -317,7 +334,7 @@ bool Grid::existsPath(){
             proxypaths = ForwardPath(gridvec,paths[y]);
             //add these paths to the paths vec
             paths.insert(paths.end(), proxypaths.begin(), proxypaths.end());
-            //AppendVec(paths,proxypaths);
+
         }
 
         //now go through our list of paths and remove the old paths
@@ -330,7 +347,6 @@ bool Grid::existsPath(){
             }
         }
     }
-	//return false;
 }
 void Grid::outputPath(std::ostream& o){
 	/*
