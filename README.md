@@ -3,15 +3,10 @@ Some cells in the grid may be blocked. The grid should be provided in a text fil
 The format of this should be:
 
 START(0,0)
-
 GOAL(0,2)
-
 ooox
-
 xxoo
-
 ooox
-
 
 where the o's and x's denote a graphical representation of the grid. The bottom left corner is the cell (0,0).
 If a cell is denoted with an 'o' then it is open and can be traversed, whereas 'x' shows a cell that is blocked.
