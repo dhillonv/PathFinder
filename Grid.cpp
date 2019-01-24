@@ -14,38 +14,10 @@ Grid::Grid(){
 }
 
 Grid::~Grid(){
-    //no need for a destructor
 }
 
 void Grid::loadFromFile(const std::string& filename){
-    /*
-
-	Loads a grid description from a file.
-	The format of the file is as follows:
-	 -- the first line is
-	 START(X1,Y1)
-	 where X1 and Y1 are integer numbers.
-	 -- the second line is
-	 GOAL(X2,Y2)
-	 where X2 and Y2 are integer numbers.
-	 -- the remaining lines show the grid as follows
-
-	ooox
-	xxoo
-    ooox
-
-	where o represents an empty cell, and x represents a blocked
-	cell. The lower left symbol is cell (0,0), and the top right
-	symbol is cell (m-1,n-1), where m is the width and n is the height
-	of the grid (in the above example, m=4, n=3). In the file there
-	is no empty line between GOAL(X2,Y2) and the grid.
-	If the file does not exist or there is an error during reading,
-	throw "Error loading grid description."
-	If the start or end position is outside of the grid, throw
-	"Position outside of the range of the grid."
-	 */
-
-	//load file - we assume the name of the file we are opening is of type .txt
+    //load file - we assume the name of the file we are opening is of type .txt
 
     std::ifstream inputfile;
     std::string fline,blockcheck;
@@ -132,7 +104,6 @@ void Grid::loadFromFile(const std::string& filename){
     }
 
     n = counter - 1; //the height of the grid - 1, will be adjusted
-
     //now adjust the y coordinate
     for(int x=0;x<gridvec.size();++x){
         std::get<1>(gridvec[x]) +=n;
@@ -517,6 +488,7 @@ void Grid::outputDirections(std::ostream& o){
     }
 
 std::vector<std::vector<std::tuple<int,int>>> ForwardPath(std::vector<std::tuple<int,int,int>> grid, std::vector<std::tuple<int,int>> path){
+
     //returns all the current one step movements according to grid
     std::vector<std::vector<std::tuple<int,int>>> output;
     std::vector<std::tuple<int,int>> proxypath;
@@ -582,6 +554,7 @@ void PrintPaths(std::vector<std::vector<std::tuple<int,int>>> vec1){
     std::cout << std::endl;
     }
     }
+
 bool PointInPath(int x, int y, std::vector<std::tuple<int,int>> path){
     //checks whether a point x,y is in path
     int x1,y1;
