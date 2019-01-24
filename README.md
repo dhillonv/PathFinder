@@ -3,10 +3,13 @@ Some cells in the grid may be blocked. The grid should be provided in a text fil
 The format of this should be:
 
 START(0,0)
+
 GOAL(0,2)
 
 ooox
+
 xxoo
+
 ooox
 
 
