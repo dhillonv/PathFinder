@@ -1,4 +1,4 @@
-The goal of this program is to find a path from a start point to a goal point in a rectangular grid.
+The purpose of this program is to find a path from a start point to a goal point in a rectangular grid.
 Some cells in the grid may be blocked. The grid should be provided in a text file "grid.txt".
 The format of this should be:
 
